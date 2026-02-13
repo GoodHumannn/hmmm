@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>For You ❤️</title>
+<title>For You Babygorl</title>
 
-<!-- Romantic Google Font -->
+<!-- Romantic Font -->
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
@@ -44,7 +44,7 @@
   #yes {
     background: #ff4d6d;
     color: white;
-    box-shadow: 0 0 15px rgba(255,77,109,0.6);
+    box-shadow: 0 0 18px rgba(255,77,109,0.6);
   }
 
   #yes:hover {
@@ -55,6 +55,7 @@
     background: #222;
     color: #aaa;
     position: absolute;
+    transition: left 0.05s linear, top 0.05s linear;
   }
 
   .link {
@@ -68,7 +69,7 @@
 
 <body>
 
-<!-- Soft background music -->
+<!-- Background Music -->
 <audio autoplay loop>
   <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8d6c4a7c1.mp3?filename=romantic-piano-110397.mp3" type="audio/mpeg">
 </audio>
@@ -87,17 +88,24 @@
   const noBtn = document.getElementById("no");
   const yesBtn = document.getElementById("yes");
 
-  // Intelligent dodge: moves away from cursor direction
+  // Dodge settings (tune if you want harder/easier)
+  let dodgeStrength = 1.4;   // bigger = jumps farther
+  let dodgeRadius = 200;     // bigger = reacts sooner
+
   document.addEventListener("mousemove", (e) => {
     const rect = noBtn.getBoundingClientRect();
-    const dx = e.clientX - (rect.left + rect.width / 2);
-    const dy = e.clientY - (rect.top + rect.height / 2);
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    const dx = e.clientX - cx;
+    const dy = e.clientY - cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist < 120) {
-      let newX = rect.left - dx * 0.6;
-      let newY = rect.top - dy * 0.6;
+    if (dist < dodgeRadius) {
+      let newX = rect.left - dx * dodgeStrength;
+      let newY = rect.top - dy * dodgeStrength;
 
+      // keep button inside screen
       newX = Math.max(0, Math.min(window.innerWidth - rect.width, newX));
       newY = Math.max(0, Math.min(window.innerHeight - rect.height, newY));
 
