@@ -3,15 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>For You Babygorl</title>
+<title>For You ❤️</title>
 
-<!-- Romantic Font -->
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
   body {
     margin: 0;
-    background: #0b0b0f;
+    background: radial-gradient(circle at center, #111 0%, #050509 100%);
     color: #fff;
     font-family: 'Great Vibes', cursive;
     height: 100vh;
@@ -21,13 +20,12 @@
     overflow: hidden;
   }
 
-  .center {
-    text-align: center;
-  }
+  .center { text-align: center; }
 
   h1 {
     font-size: 3rem;
     letter-spacing: 1px;
+    transition: 0.6s ease;
   }
 
   button {
@@ -38,24 +36,22 @@
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    transition: 0.2s ease;
   }
 
   #yes {
     background: #ff4d6d;
     color: white;
-    box-shadow: 0 0 18px rgba(255,77,109,0.6);
+    box-shadow: 0 0 20px rgba(255,77,109,0.6);
+    transition: 0.25s;
   }
 
-  #yes:hover {
-    transform: scale(1.08);
-  }
+  #yes:hover { transform: scale(1.08); }
 
   #no {
     background: #222;
     color: #aaa;
     position: absolute;
-    transition: left 0.05s linear, top 0.05s linear;
+    transition: left 0.06s linear, top 0.06s linear;
   }
 
   .link {
@@ -64,34 +60,81 @@
     text-decoration: underline;
     font-family: Arial, sans-serif;
   }
+
+  /* Glow after YES */
+  .glow {
+    animation: glow 2s ease forwards;
+  }
+
+  @keyframes glow {
+    0% { text-shadow: 0 0 0px #ff4d6d; }
+    100% { text-shadow: 0 0 30px #ff4d6d, 0 0 60px #ff4d6d; }
+  }
+
+  /* Floating hearts */
+  .heart {
+    position: fixed;
+    color: #ff4d6d;
+    font-size: 18px;
+    animation: floatUp 2.5s linear forwards;
+    pointer-events: none;
+  }
+
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-200px) scale(1.5); }
+  }
+
+  /* HAW popup */
+  #haw {
+    position: fixed;
+    font-family: Arial, sans-serif;
+    font-size: 28px;
+    color: #ff4d6d;
+    display: none;
+    pointer-events: none;
+    animation: fade 0.8s ease;
+  }
+
+  @keyframes fade {
+    0% { opacity: 0; transform: scale(0.7); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.1); }
+  }
 </style>
 </head>
 
 <body>
 
-<!-- Background Music -->
-<audio autoplay loop>
+<audio id="music" loop>
   <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8d6c4a7c1.mp3?filename=romantic-piano-110397.mp3" type="audio/mpeg">
 </audio>
 
 <div id="page1" class="center">
-  <h1>Will you be my Valentine? 💘</h1>
+  <h1 id="title">Will you be my Valentine? 💘</h1>
   <button id="yes">YES ❤️</button>
   <button id="no">NO ❌</button>
 </div>
 
 <div id="page2" class="center" style="display:none;">
-  <h1>So click <span class="link" onclick="goToSite()">here</span> baby 💖</h1>
+  <h1 class="glow">So click <span class="link" onclick="goToSite()">here</span> baby 💖</h1>
 </div>
+
+<div id="haw">HAW </div>
 
 <script>
   const noBtn = document.getElementById("no");
   const yesBtn = document.getElementById("yes");
+  const music = document.getElementById("music");
+  const haw = document.getElementById("haw");
 
-  // Dodge settings (tune if you want harder/easier)
-  let dodgeStrength = 1.4;   // bigger = jumps farther
-  let dodgeRadius = 200;     // bigger = reacts sooner
+  let dodgeStrength = 1.5;
+  let dodgeRadius = 210;
 
+  // Start music after first interaction (mobile-safe)
+  document.body.addEventListener("click", () => music.play(), { once: true });
+
+  // Intelligent dodge
   document.addEventListener("mousemove", (e) => {
     const rect = noBtn.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
@@ -105,7 +148,6 @@
       let newX = rect.left - dx * dodgeStrength;
       let newY = rect.top - dy * dodgeStrength;
 
-      // keep button inside screen
       newX = Math.max(0, Math.min(window.innerWidth - rect.width, newX));
       newY = Math.max(0, Math.min(window.innerHeight - rect.height, newY));
 
@@ -114,10 +156,38 @@
     }
   });
 
+  // If NO clicked → HAW + teleport far
+  noBtn.addEventListener("click", () => {
+    haw.style.display = "block";
+    haw.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    haw.style.top = Math.random() * (window.innerHeight - 50) + "px";
+
+    setTimeout(() => haw.style.display = "none", 700);
+
+    const newX = Math.random() * (window.innerWidth - 100);
+    const newY = Math.random() * (window.innerHeight - 50);
+    noBtn.style.left = newX + "px";
+    noBtn.style.top = newY + "px";
+  });
+
+  // YES magical reveal
   yesBtn.addEventListener("click", () => {
+    createHearts();
     document.getElementById("page1").style.display = "none";
     document.getElementById("page2").style.display = "block";
   });
+
+  function createHearts() {
+    for (let i = 0; i < 25; i++) {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "❤";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.top = window.innerHeight + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 2500);
+    }
+  }
 
   function goToSite() {
     window.location.href = "https://GoodHumannn.github.io/vallentine";
@@ -126,3 +196,4 @@
 
 </body>
 </html>
+
